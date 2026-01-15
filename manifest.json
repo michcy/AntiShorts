@@ -1,0 +1,32 @@
+{
+    "manifest_version": 3,
+    "name": "AntiShorts",
+    "version": "1.0.0",
+    "description": "Remove YouTube Shorts",
+    "icons": {
+        "16": "sonicThumbsUp.png",
+        "32": "sonicThumbsUp.png",
+        "48": "sonicThumbsUp.png",
+        "128": "sonicThumbsUp.png"
+    },
+    "content_scripts": [{
+        "matches": [
+            "https://www.youtube.com/*"
+        ],
+        "js": [
+            "index.js"
+        ],
+        "css": ["style.css"],
+        "run_at": "document_idle",
+        "all_frames": true
+    }],
+    "action": {
+        "default_popup": "antiShorts.html"
+    },
+    "permissions": [
+        "storage"
+    ],
+    "host_permissions": [
+        "https://www.youtube.com/*"
+    ]
+}

@@ -1,0 +1,21 @@
+{
+    "manifest_version": 3,
+    "name": "AntiShorts",
+    "version": "1.0.0",
+    "icons": {
+        "32": "sonicThumbsUp.png"
+    },
+    "background": {
+        "service-worker": "service-worker.js",
+        "type": "module"
+    },
+    "action": {
+        "default_popup": "antiShorts.html"
+    },
+    "permissions" : [
+        "scripting"
+    ],
+    "host_permissions": [
+        "https://www.youtube.com/*"
+    ]
+}
