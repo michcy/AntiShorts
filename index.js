@@ -35,8 +35,9 @@ function removeShortsFromAccounts(display) {
         !window.location.href.includes("/channel/") &&
         !window.location.href.includes("/c/") &&
         !window.location.href.includes("/@")
-    ) return;    const shortSection = document.querySelectorAll(".ytd-reel-shelf-renderer");
-    if (!shortSection) return;
+    ) return;
+    const shortSection = document.querySelectorAll(".ytd-reel-shelf-renderer");
+    if (!shortSection?.length) return;
     const parent = shortSection[0].closest(".ytd-section-list-renderer");
     if (display === "none") {
         parent.classList.add("antiShorts")
