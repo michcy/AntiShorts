@@ -1,4 +1,5 @@
 function removeShortsFromSearch(display) {
+    /*
     document.querySelectorAll(".ytChipShapeOnlyTextPadding").forEach(el => {
         if (el.innerText === "Shorts") {
             let parent = el.parentNode.parentNode.parentNode.parentNode;
@@ -11,40 +12,81 @@ function removeShortsFromSearch(display) {
     document.querySelectorAll(".ytGridShelfViewModelHost").forEach(el => {
         el.style.setProperty("display", `${display}`, "important");
     })
+     */
+
+    if (!window.location.href.includes("/results")) return;
+    const url = new URL(window.location.href);
+    const hasFilter = url.searchParams.get("sp") === "EgIQAQ%3D%3D";
+
+    if (display === "none" && !hasFilter) {
+        url.searchParams.append("sp", "EgIQAQ%3D%3D");
+        window.location.replace(url.toString());
+    } else if (display !== "none" && hasFilter) {
+        url.searchParams.delete("sp");
+        window.location.replace(url.toString());
+    }
 }
 
+
 function removeShortsFromAccounts(display) {
-    document.querySelectorAll(".ytd-reel-shelf-renderer").forEach(el => {
-        if (el.innerText === "Shorts") {
-            const shortPage = el.parentNode;
-            if (display === "none") {
-                shortPage.classList.add("antiShorts")
-            }
-            else{
-                shortPage.classList.remove("antiShorts")
-            }
-        }
-    });
-    document.querySelectorAll(".yt-tab-shape--host-clickable[tab-title=\"Shorts\"]").forEach(el => {
-        el.style.setProperty("display", `${display}`, "important");
-    })
+
+// ✅ Return early if the URL doesn't match ANY of the expected patterns
+    if (
+        !window.location.href.includes("/channel/") &&
+        !window.location.href.includes("/c/") &&
+        !window.location.href.includes("/@")
+    ) return;    const shortSection = document.querySelectorAll(".ytd-reel-shelf-renderer");
+    if (!shortSection) return;
+    const parent = shortSection[0].closest(".ytd-section-list-renderer");
+    if (display === "none") {
+        parent.classList.add("antiShorts")
+    } else {
+        parent.classList.remove("antiShorts")
+    }
+
+
+    const shortPage = document.querySelector(".ytTabShapeHostClickable[tab-title=\"Shorts\"]");
+    if (!shortPage) return;
+    if (display === "none") {
+        shortPage.classList.add("antiShorts")
+    } else {
+        shortPage.classList.remove("antiShorts")
+    }
 }
 
 function removeShortsFromHomePage(display) {
-    document.querySelectorAll(".ytd-rich-section-renderer").forEach(el => {
+    if (window.location.href !== "https://www.youtube.com/") return;
+    const shortsSections = document.querySelectorAll("span.ytd-rich-shelf-renderer");
+    if (!shortsSections) return;
+    shortsSections.forEach(el => {
+        if (!el.innerText.includes("Shorts")) return;
+        const parent = el.closest(".ytd-rich-grid-renderer");
+        if (display === "none") {
+            parent.classList.add("antiShorts")
+        } else {
+            parent.classList.remove("antiShorts")
+        }
+    })
+}
+
+function removeShortsFromNavigation(display) {
+    const navigationTabs = document.querySelectorAll(".ytd-mini-guide-entry-renderer[title=\"Shorts\"]");
+    if (!navigationTabs) return;
+    navigationTabs.forEach(el => {
         if (display === "none") {
             el.classList.add("antiShorts")
         } else {
             el.classList.remove("antiShorts")
         }
     })
-}
 
-function removeShortsFromNavigation(display) {
-    document.querySelectorAll(".ytd-mini-guide-entry-renderer[title=\"Shorts\"]").forEach(el => {
-        el.style.setProperty("display", `${display}`, "important");
-    })
-    document.querySelector(".yt-simple-endpoint[title=\"Shorts\"]").style.setProperty("display", `${display}`, "important");
+    const shortsTab = document.querySelector(".yt-simple-endpoint[title=\"Shorts\"]");
+    if (!shortsTab) return;
+    if (display === "none") {
+        shortsTab.classList.add("antiShorts")
+    } else {
+        shortsTab.classList.remove("antiShorts")
+    }
 }
 
 let Shorts_Navigation = 'none';
@@ -66,12 +108,12 @@ function removeShorts() {
     removeShortsFromHomePage(Shorts_Homepage)
 }
 
-const observer = new MutationObserver( () => {
+const observer = new MutationObserver(() => {
     removeShorts()
 });
-observer.observe(document, {childList: true, subtree: true});
+observer.observe(document.body, {childList: true, subtree: true});
 
-chrome.storage.onChanged.addListener( function (changes, area) {
+chrome.storage.onChanged.addListener(function (changes, area) {
     for (let [key, {
         oldValue,
         newValue
