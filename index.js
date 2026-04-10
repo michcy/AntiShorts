@@ -37,21 +37,30 @@ function removeShortsFromAccounts(display) {
         !window.location.href.includes("/@")
     ) return;
     const shortSection = document.querySelectorAll(".ytd-reel-shelf-renderer");
-    if (!shortSection?.length) return;
-    const parent = shortSection[0].closest(".ytd-section-list-renderer");
-    if (display === "none") {
-        parent.classList.add("antiShorts")
-    } else {
-        parent.classList.remove("antiShorts")
+    if (shortSection?.length) {
+        const parent = shortSection[0].closest(".ytd-section-list-renderer");
+        if (display === "none") {
+            parent.classList.add("antiShorts")
+        } else {
+            parent.classList.remove("antiShorts")
+        }
     }
-
-
+    const getTabElements = () =>
+        Array.from(document.querySelectorAll(".ytTabShapeHostClickable:not(.antiShorts)"));
     const shortPage = document.querySelector(".ytTabShapeHostClickable[tab-title=\"Shorts\"]");
     if (!shortPage) return;
+
+    const tabGroupShapeSlider = document.querySelector(".tabGroupShapeSlider");
+    const currentTabElement = document.querySelector(".ytTabShapeHostClickable[aria-selected=\"true\"]");
+
     if (display === "none") {
         shortPage.classList.add("antiShorts")
+        const currentIndex = getTabElements().findIndex(el => el === currentTabElement);
+        tabGroupShapeSlider.style.transform = `translateX(${Math.round(72.3 * currentIndex)}px)`;
     } else {
         shortPage.classList.remove("antiShorts")
+        const currentIndex = getTabElements().findIndex(el => el === currentTabElement);
+        tabGroupShapeSlider.style.transform = `translateX(${Math.round(72.3 * currentIndex)}px)`;
     }
 }
 
