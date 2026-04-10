@@ -36,6 +36,7 @@ function removeShortsFromAccounts(display) {
         !window.location.href.includes("/c/") &&
         !window.location.href.includes("/@")
     ) return;
+
     const shortSection = document.querySelectorAll(".ytd-reel-shelf-renderer");
     if (shortSection?.length) {
         const parent = shortSection[0].closest(".ytd-section-list-renderer");
@@ -112,6 +113,13 @@ chrome.storage.sync.get(["ShortsNavigation", "ShortsHomepage", "ShortsSearch", "
 });
 
 function removeShorts() {
+    if (window.location.pathname.startsWith("/shorts/")) {
+        if (history.length > 1) {
+            window.history.go(-1);
+        } else {
+            window.location.href = "https://www.youtube.com";
+        }
+    }
     removeShortsFromNavigation(Shorts_Navigation)
     removeShortsFromSearch(Shorts_Search)
     removeShortsFromAccounts(Shorts_Accounts)
